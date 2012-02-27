@@ -1,4 +1,5 @@
-irisCrossValidation <- function(n, k) {
+irisCrossValidation <- function(k) {
+    n <- length(iris[,1])
     indices <- sample(1 : n, size=n, replace=FALSE, prob=rep(1/n, n))
     empiricErrors <- rep(0, k)
     for (i in 1 : k) {
