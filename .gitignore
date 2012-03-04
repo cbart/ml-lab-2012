@@ -7,4 +7,5 @@ Machine Learning.ipr
 Machine Learning.iws
 
 # Artifacts
-build/
+/build
+/out
