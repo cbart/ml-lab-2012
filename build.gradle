@@ -1,0 +1,28 @@
+apply plugin: 'scala'
+apply plugin: 'java'
+apply plugin: 'groovy'
+apply plugin: 'idea'
+
+repositories {
+  mavenCentral()
+  mavenRepo urls: "http://m2repo.spockframework.org/snapshots"
+}
+
+scalaVersion = '2.9.1'
+
+dependencies {
+  scalaTools "org.scala-lang:scala-compiler:$scalaVersion",
+      "org.scala-lang:scala-library:$scalaVersion"
+
+  groovy "org.codehaus.groovy:groovy-all:1.8.6"
+
+  compile "org.scala-lang:scala-library:$scalaVersion"
+
+  testCompile "org.spockframework:spock-core:0.6-groovy-1.8"
+  testCompile "junit:junit:4.10"
+}
+
+jar {
+  from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+  manifest { attributes 'Main-Class': 'mlclass.run.Run' }
+}

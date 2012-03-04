@@ -1,0 +1,10 @@
+# Gradle
+.gradle/
+
+# IntelliJ IDEA
+Machine Learning.iml
+Machine Learning.ipr
+Machine Learning.iws
+
+# Artifacts
+build/
