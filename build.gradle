@@ -13,6 +13,7 @@ scalaVersion = '2.9.1'
 dependencies {
   scalaTools "org.scala-lang:scala-compiler:$scalaVersion",
       "org.scala-lang:scala-library:$scalaVersion"
+      "com.googlecode.scala-recog:scala-recog:0.2.3-SNAPSHOT"
 
   groovy "org.codehaus.groovy:groovy-all:1.8.6"
 
