@@ -1,15 +1,18 @@
 source("lab03-modelSelection.r")
 
+Train <- function (sample) kknn(decision~., sample, sample, k=1)
+
+
+
 # Validation
-(function (sampleSize, universeSize, distribution, universe, loopSteps, testSize, credibility) {
+validation <- function (trainKnn, sampleSize, universeSize, distribution, universe, loopSteps, testSize, credibility) {
     print("[Validation]")
     learningSampleIndices <- sample(1:universeSize, size=sampleSize, replace=FALSE, prob=distribution)
     learningSample <- universe[learningSampleIndices, ]
-
     fullTestSampleIndices <- 1:universeSize
     fullTestSample <- universe[fullTestSampleIndices, ]
     fullTestSampleActualDecisions <- universe$decision[fullTestSampleIndices]
-    classifier <- kknn(decision~., learningSample, learningSample, k=1)
+    classifier <- trainKnn(learningSample)
     fullTestSamplePredictedDecisions <- predict(classifier, fullTestSample, type="class")
     generalizationError <- mean(fullTestSampleActualDecisions != fullTestSamplePredictedDecisions)
     print(sprintf("Generalization error: %f", generalizationError))
@@ -30,4 +33,8 @@ source("lab03-modelSelection.r")
     print(sprintf("E(fU) < ET(fU) + %f with credibility of %f", epsilon, credibility))
     hoeffdingEpsilon <- sqrt(-log(1 - credibility)/(2 * testSize))
     print(sprintf("Epsilon given by Hoeffding inequality: %f", hoeffdingEpsilon))
-})(1000, UniverseSize, Distribution, Universe, 10000, 1000, 0.95)
+}
+
+# Example to run
+#
+# validation(Train, 1000, UniverseSize, Distribution, Universe, 10000, 1000, 0.95)
