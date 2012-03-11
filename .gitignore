@@ -9,3 +9,7 @@ Machine Learning.iws
 # Artifacts
 /build
 /out
+
+# Labs
+.RData
+.Rhistory
