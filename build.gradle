@@ -10,17 +10,22 @@ repositories {
 
 scalaVersion = '2.9.1'
 
+ideaProject {
+  javaVersion = '1.6'
+}
+
 dependencies {
   scalaTools "org.scala-lang:scala-compiler:$scalaVersion",
       "org.scala-lang:scala-library:$scalaVersion"
-      "com.googlecode.scala-recog:scala-recog:0.2.3-SNAPSHOT"
 
   groovy "org.codehaus.groovy:groovy-all:1.8.6"
 
-  compile "org.scala-lang:scala-library:$scalaVersion"
+  compile "org.scala-lang:scala-library:$scalaVersion",
+      "net.sf.opencsv:opencsv:2.3",
+      "org.scalaz:scalaz-core_$scalaVersion:6.0.4"
 
-  testCompile "org.spockframework:spock-core:0.6-groovy-1.8"
-  testCompile "junit:junit:4.10"
+  testCompile "org.spockframework:spock-core:0.6-groovy-1.8",
+      "junit:junit:4.10"
 }
 
 jar {
