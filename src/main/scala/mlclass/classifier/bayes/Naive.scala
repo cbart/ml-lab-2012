@@ -7,16 +7,16 @@ object Naive {
   type Sample[Attribute, Decision] = (List[Attribute], Decision)
   type Training[Attribute, Decision] = List[Sample[Attribute, Decision]]
 
-  def apply[Attribute, Decision](training: Training[Attribute, Decision]):
+  def apply[Attribute, Decision](training: Training[Attribute, Decision], epsilon: Double):
       Naive[Attribute, Decision] = {
     val dec = ℙ(training.map(decision))
-    val attr = training
+    val attr: Map[Decision, Map[Int, Map[Attribute, Double]]] = training
         .groupBy(decision)
         .mapValues(_.map(attributes))
         .mapValues {attrs =>
-      attrs.transpose.map(ℙ)
+      (for ((sample, i) <- attrs.transpose.zipWithIndex) yield (i, ℙ(sample))).toMap
     }
-    new Naive[Attribute, Decision](dec, attr)
+    new Naive[Attribute, Decision](dec, attr, epsilon)
   }
 
   private[this] def ℙ[Observation](experimentResult: List[Observation]):
@@ -38,11 +38,12 @@ object Naive {
 
 
 final class Naive[Attribute, Decision] private (dec: Map[Decision, Double],
-    attr: Decision => Int => Map[Attribute, Double]) {
+    attr: Decision => Int => Map[Attribute, Double], epsilon: Double) {
   def classify(sample: List[Attribute]): Map[Decision, Double] = {
-    for ((decision, pdecision) <- dec) yield {
-      val Attrs = for ((value, i) <- sample.zipWithIndex) yield attr(decision)(i).getOrElse(value, 0.01)
-      (decision, (pdecision :: Attrs).map(math.log).sum)
+    val indexedSample = sample.zipWithIndex
+    for ((decision, pDecision) <- dec) yield {
+      val pAttrs = for ((value, i) <- indexedSample) yield attr(decision)(i).getOrElse(value, epsilon)
+      (decision, (pDecision :: pAttrs).map(math.log).sum)
     }
   }
 }

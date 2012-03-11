@@ -1,14 +1,11 @@
-package mlclass.bayes
+package mlclass.run
 
 import mlclass.io.{TypedCsv, CsvParsers}
+import mlclass.classifier.bayes.Naive._
 import mlclass.classifier.bayes.Naive
-import org.junit.{Ignore, Test}
 
 
-/**
- * @author cbart@students.mimuw.edu.pl (Cezary Bartoszuk)
- */
-class ClassifierTest {
+object RunBayes {
   val decision: String => Boolean = {
     case "T" => true
     case "F" => false
@@ -27,10 +24,9 @@ class ClassifierTest {
 
   val typedTestSet = testSet.tail.map(testSample => testSample.map(_.toInt))
 
-  val classifier = Naive(typedTrainingSet, 0.01)
-
-  @Ignore @Test def shouldClassify() {
-    val classified = typedTestSet.par.map(classifier.classify _)
-    println(classified)
+  def main(args: Array[String]) {
+    val classifier = Naive(typedTrainingSet, args(0).toDouble)
+    val results = typedTestSet.par.map(classifier.classify _)
+    results.foreach(wages => println("%s,%s".format(wages(true), wages(false))))
   }
 }
