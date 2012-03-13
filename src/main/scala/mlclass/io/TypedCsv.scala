@@ -6,6 +6,6 @@ package mlclass.io
 class TypedCsv {
   def mapTypes[Attribute, Decision](data: List[List[String]], attribute: String => Attribute,
       decision: String => Decision): List[(List[Attribute], Decision)] = {
-    data.map(row => (row.init map attribute, decision(row.last)))
+    data.map{row => (row.init map attribute, decision(row.last))}
   }
 }

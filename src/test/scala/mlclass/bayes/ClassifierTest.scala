@@ -17,12 +17,12 @@ class ClassifierTest {
 
   val attribute: String => Int = _.toInt
 
-  val trainingSet = (new CsvParsers).parse("/train.csv")
+  val trainingSet = (new CsvParsers).parseClasspath("/train.csv")
       .fold((s: String) => throw new Exception(s), identity)
 
   val typedTrainingSet = (new TypedCsv).mapTypes(trainingSet.tail, attribute, decision)
 
-  val testSet = (new CsvParsers).parse("/test.csv")
+  val testSet = (new CsvParsers).parseClasspath("/test.csv")
       .fold((s: String) => throw new Exception(s), identity)
 
   val typedTestSet = testSet.tail.map(testSample => testSample.map(_.toInt))

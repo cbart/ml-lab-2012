@@ -2,8 +2,9 @@ package mlclass.io
 
 import scala.util.parsing.combinator.RegexParsers
 import scala.util.parsing.input.{StreamReader, Reader}
-import java.io.{InputStreamReader, BufferedReader}
 import scalaz.Validation
+import java.io.{File, FileInputStream, InputStreamReader, BufferedReader}
+
 
 /**
  * @author cbart@students.mimuw.edu.pl (Cezary Bartoszuk)
@@ -38,8 +39,13 @@ class CsvParsers extends RegexParsers {
     case Failure(msg, next) => scalaz.Failure("%s\n%s".format(msg, next.pos.longString))
   }
 
-  def parse(filename: String): Validation[String, List[List[String]]] = parse {
+  def parseClasspath(filename: String): Validation[String, List[List[String]]] = parse {
     val stream = getClass.getResourceAsStream(filename)
+    StreamReader(new BufferedReader(new InputStreamReader(stream)))
+  }
+
+  def parseFile(filename: String): Validation[String, List[List[String]]] = parse {
+    val stream = new FileInputStream(new File(filename))
     StreamReader(new BufferedReader(new InputStreamReader(stream)))
   }
 }
