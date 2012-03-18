@@ -13,7 +13,7 @@ object RunNormalize {
 
   def main(args: Array[String]) {
     val Success(csv) = csvParsers.parseFile(args(0)).map(m => typedCsv.mapTypes(m.init, double, double))
-    val measures = for ((t :: Nil, f) <- csv) yield (f - t)
+    val measures = for ((t :: Nil, f) <- csv) yield (t - f)
     val maxMeasure = measures.max
     val normalizedMeasures = measures.map(_ - maxMeasure)
     normalizedMeasures foreach { m =>

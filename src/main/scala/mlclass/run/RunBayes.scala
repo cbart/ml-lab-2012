@@ -19,10 +19,10 @@ object RunBayes {
 
   val typedTrainingSet = (new TypedCsv).mapTypes(trainingSet.tail, attribute, decision)
 
-  val testSet = (new CsvParsers).parseClasspath("/test.csv")
+  lazy val testSet = (new CsvParsers).parseClasspath("/test.csv")
       .fold((s: String) => throw new Exception(s), identity)
 
-  val typedTestSet = testSet.tail.map(testSample => testSample.map(_.toInt))
+  lazy val typedTestSet = testSet.tail.map(testSample => testSample.map(_.toInt))
 
   def main(args: Array[String]) {
     val classifier = Naive(typedTrainingSet, args(0).toDouble)

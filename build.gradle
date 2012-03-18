@@ -30,5 +30,5 @@ dependencies {
 
 jar {
   from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-  manifest { attributes 'Main-Class': 'mlclass.run.RunNormalize' }
+  manifest { attributes 'Main-Class': 'mlclass.run.RunAccuracy' }
 }
