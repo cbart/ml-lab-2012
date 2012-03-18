@@ -17,6 +17,22 @@ net <- function (eta, i, t, beta, sigma) {
     }
 }
 
+netWhole <- function (eta, iv, tv, beta, sigma) {
+    size <- length(iv)
+    learning <- list()
+    for (index in 1:size) {
+        learning[[index]] <- net(eta, iv[index], tv[index], beta, sigma)
+    }
+    function (network) {
+        net <- network
+        for (index in 1:size) {
+            net <- learning[[index](net)
+        }
+        net
+    }
+}
+
+
 randomNetwork <- function(size) {
     w <- sample(seq(-5, 5, by=0.1), size, replace=FALSE)
     u <- sample(seq(-5, 5, by=0.1), size, replace=FALSE)
