@@ -26,7 +26,7 @@ netWhole <- function (eta, iv, tv, beta, sigma) {
     function (network) {
         net <- network
         for (index in 1:size) {
-            net <- learning[[index](net)
+            net <- learning[[index]](net)
         }
         net
     }

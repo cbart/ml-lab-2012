@@ -1,6 +1,5 @@
 package mlclass.run
 
-import mlclass.classifier.bayes.Naive._
 import mlclass.classifier.bayes.Naive
 import mlclass.classifier.Measures
 

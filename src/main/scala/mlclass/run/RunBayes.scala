@@ -26,7 +26,7 @@ object RunBayes {
 
   def main(args: Array[String]) {
     val classifier = Naive(typedTrainingSet, args(0).toDouble)
-    val results = typedTestSet.par.map(classifier.classify _)
+    val results = typedTestSet.map(classifier.classify _)
     results.foreach(wages => println("%s,%s".format(wages(true), wages(false))))
   }
 }
