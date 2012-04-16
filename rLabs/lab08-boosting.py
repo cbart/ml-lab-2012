@@ -1,4 +1,4 @@
-from math import log, exp
+from math import log, exp, fabs
 
 simpleData = [[0, -1], [1, 1], [1, 1]]
 complexData = [[0, 1], [1, -1], [2, 1], [3, -1],
@@ -16,11 +16,13 @@ def alpha(e):
     return 0.5 * log((1.0 - e)/e)
 
 def classifier(data, prob, classifiers):
-    e = 100
+    e = 0.0
     h = None
+    def f(x):
+        return fabs(0.5 - x)
     for c in classifiers:
-        ce = error(data, c, prob)
-        if ce < e:
+        ce = f(error(data, c, prob))
+        if ce > e:
             e = ce
             h = c
     return h
@@ -46,9 +48,9 @@ def boosting(data, classifiers):
     e = []
     a = []
     i = 1
-    while (dPrev != dCur) and (i < 1000):
+    while (dPrev != dCur) and (i < 100):
         h.append(classifier(data, dCur, classifiers))
-        print("h%d = %s" % (i, ", ".join(["%.2f" % h[-1](d[0]) for d in data])))
+        print("h%d = %s" % (i, ", ".join(["%.0f" % h[-1](d[0]) for d in data])))
         print("d%d = %s" % (i, ", ".join(["%.2f" % f for f in dCur])))
         dPrev = dCur
         e.append(error(data, h[-1], dCur))
@@ -59,7 +61,25 @@ def boosting(data, classifiers):
         dCur = [(d * exp((-1.) * a[-1] * h[-1](p[0]) * p[1])) for (d, p) in zip(dPrev, data)]
         dCurSum = sum(dCur)
         dCur = [d / dCurSum for d in dCur]
+    return [a, h]
 
-boosting(simpleData, constClassifiers)
+def classify(booster, arg):
+    a = booster[0]
+    h = booster[1]
+    s = sum([ai * hi(arg) for (ai, hi) in zip(a, h)])
+    if s < 0:
+        return -1
+    else:
+        return 1
 
-boosting(complexData, lessThanOrEqClassifiers)
+#booster = boosting(simpleData, constClassifiers)
+#classified = [classify(booster, d[1]) for d in simpleData]
+#print("Classified: %s" % classified)
+#print("   Results: %s" % [d[1] for d in simpleData])
+
+#booster = boosting(complexData, lessThanOrEqClassifiers)
+#booster = boosting(complexData, equalClassifiers)
+booster = boosting(complexData, notEqualClassifiers)
+classified = [classify(booster, d[0]) for d in complexData]
+print("Classified: %s" % classified)
+print("   Results: %s" % [d[1] for d in complexData])
