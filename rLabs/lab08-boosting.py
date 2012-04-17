@@ -15,7 +15,7 @@ def error(data, h, prob):
 def alpha(e):
     return 0.5 * log((1.0 - e)/e)
 
-def classifier(data, prob, classifiers):
+def classifierF(data, prob, classifiers):
     e = 0.0
     h = None
     def f(x):
@@ -27,11 +27,26 @@ def classifier(data, prob, classifiers):
             h = c
     return h
 
+def classifier(data, prob, classifiers):
+    e = 100
+    h = None
+    for c in classifiers:
+        ce = error(data, c, prob)
+        if ce < e:
+            e = ce
+            h = c
+    return h
+
+
 constClassifiers = [lambda x: 1, lambda x: -1]
 
 def lessThanOrEq(x):
     return lambda y: 1 if (y <= x) else -1
 lessThanOrEqClassifiers = [lessThanOrEq(d[0]) for d in complexData]
+
+def greaterThanOrEq(x):
+    return lambda y: -1 if (y <= x) else 1
+greaterThanOrEqClassifiers = [greaterThanOrEq(d[0]) for d in complexData]
 
 def equal(x):
     return lambda y: 1 if (x == y) else -1
@@ -48,7 +63,7 @@ def boosting(data, classifiers):
     e = []
     a = []
     i = 1
-    while (dPrev != dCur) and (i < 100):
+    while (dPrev != dCur) and (i < 50):
         h.append(classifier(data, dCur, classifiers))
         print("h%d = %s" % (i, ", ".join(["%.0f" % h[-1](d[0]) for d in data])))
         print("d%d = %s" % (i, ", ".join(["%.2f" % f for f in dCur])))
@@ -77,9 +92,11 @@ def classify(booster, arg):
 #print("Classified: %s" % classified)
 #print("   Results: %s" % [d[1] for d in simpleData])
 
-#booster = boosting(complexData, lessThanOrEqClassifiers)
-#booster = boosting(complexData, equalClassifiers)
-booster = boosting(complexData, notEqualClassifiers)
+#booster = boosting(complexData, lessThanOrEqClassifiers)  # 40
+#booster = boosting(complexData, equalClassifiers)  # 50
+#booster = boosting(complexData, notEqualClassifiers)  # 50
+lessThanOrEqClassifiers.extend(greaterThanOrEqClassifiers)  # 40
+booster = boosting(complexData, lessThanOrEqClassifiers)
 classified = [classify(booster, d[0]) for d in complexData]
 print("Classified: %s" % classified)
 print("   Results: %s" % [d[1] for d in complexData])
